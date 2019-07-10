@@ -20,9 +20,10 @@ class HandClassificator :public Classificator {
 	string path_to_model, path_to_config, path_to_labels;
 	int width, height;
 	Scalar mean;
+	double scale;
 	bool swap;
 	Net net;
 public:
-	HandClassificator(string ptm, string ptc, string ptl, int nwidth=300, int nheight=300, Scalar nmean = (0, 0, 0, 0), bool srb = 0);
+	HandClassificator(string ptm/*, string ptc, string ptl, int nwidth=300, int nheight=300, Scalar nmean = (0, 0, 0, 0), bool srb = 0*/);
 	Mat Classify(Mat image);
 };

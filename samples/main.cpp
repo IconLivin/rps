@@ -5,21 +5,21 @@
 int main() 
 {
 	//Initialized arguments
-	VideoCapture cap("C:/Users/temp2019/Desktop/Новая папка/CV-SUMMER-CAMP/data/topdogs.mp4");
-	Mat frame;
-	string model_path =" ";
+	string name = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\mobilnet_for_rps.pb";
+	Mat cap;
+	cap = imread("rock.jfif");
+	/*string model_path =" ";
 	string config_path = " ";
-	string label_path = " ";
-	HandClassificator(model_path, config_path, label_path);
+	string label_path = " ";*/
+	HandClassificator ds(name);
 	//work with video
-	while (true) {
-		cap >> frame;
 
-		imshow("Я люблю собак", frame);
-		char ch = (char)waitKey(2);
-		if (ch == 'q')
-			break;
-	}
+		Point classIdPoint;
+		double confidence;
+		minMaxLoc(ds.Classify(cap), 0, &confidence, 0, &classIdPoint);
+		cout << "ClassID:" << classIdPoint.x << endl << "Confidence:" << confidence << endl;
+		
+	
 	cout << " " << endl;
 	return 0;
 }
