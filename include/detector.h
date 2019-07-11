@@ -20,9 +20,9 @@ class DnnDetector {
 	bool swap;
 	Net net;
 	double scale;
-	vector<Mat> *predict;
+	//vector<Mat> *predict;
 public:
-	DnnDetector(string ptm, string ptc, string ptl, int nwidth, int nheight, Scalar nmean = (0, 0, 0, 0), bool srb = 0, double scale = 0);
-	void Detect(Mat image);
-	DnnDetector() { delete predict; }
+	DnnDetector(/*string ptm, string ptc, string ptl, int nwidth, int nheight, Scalar nmean = (0, 0, 0, 0), bool srb = 0, double scale = 0*/);
+	vector<DetectedObject> Detect(Mat image);
+//	~DnnDetector() { delete predict; }
 };
