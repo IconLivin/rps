@@ -1,15 +1,15 @@
 #include "detector.h"
 
 DnnDetector::DnnDetector(/*string ptm, string ptc, string ptl, int nwidth, int nheight, Scalar nmean, bool srb, double sc*/) {
-	path_to_model = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\res10_300x300_ssd_iter_140000.caffemodel";
-	path_to_config = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\deploy.prototxt.txt";
+	path_to_model = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\mobilenet_new_graph.pb";
+	//path_to_config = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\deploy.prototxt.txt";
 //	path_to_labels = ptl;
-	width = 300;
-	height = 300;
-	mean = (104, 177, 123);
+	width = 224;
+	height = 224;
+	mean = (127.5, 127.5, 127.5);
 	swap = 0;
-	scale = 1;
-	net = readNet(path_to_model, path_to_config);
+	scale = 0.007;
+	net = readNet(path_to_model);
 	net.setPreferableBackend(DNN_BACKEND_OPENCV);
 	net.setPreferableTarget(DNN_TARGET_CPU);
 }
