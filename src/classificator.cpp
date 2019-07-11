@@ -1,7 +1,7 @@
 #include "classificator.h"
 
 HandClassificator::HandClassificator(/*, string ptc, string ptl, int nwidth, int nheight, Scalar nmean, bool srb*/) {
-	path_to_model = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\mobilenet_new_graph.pb";
+	path_to_model = "C:\\Users\\1111\\Desktop\\ROCK\\rps\\models\\mobilenet_new_graph.pb";
 	//path_to_config = ptc;
 	//path_to_labels = ptl;
 	width = 224;
