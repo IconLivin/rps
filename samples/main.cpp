@@ -11,13 +11,13 @@ string labels[3] = { "Rock","Scissors","Paper" };
 int main() 
 {
 	//Initialized arguments
-	string name = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\mobilnet_for_rps.pb";
+	//string name = "C:\\Users\\temp2019\\Desktop\\rps\\rps\\models\\mobilnet_for_rps.pb";
 	VideoCapture cap(0);
 	Mat frame;
 	cap >> frame;
 	int x = frame.cols / 8;
 	int y = frame.rows / 8;
-	char c = wait;
+	char c = 'w';
 	//
 	//Rect rect(Point(x,y*8),Point(7*x,4*y));
 	//work with video
@@ -32,22 +32,21 @@ int main()
 		case 'p': {
 			int wait_ = 3;
 			while (wait_ > 0) {
-				putText(frame, to_string(wait_), Point(x * 4, 0), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+				cap >> frame;
+				putText(frame, to_string(wait_), Point(x * 4, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 				wait_--;
 				imshow("Sasha", frame);
 				int kw = 0;
-				while (kw != 30) {
-					cap >> frame;
-					kw++;
-				}
+				waitKey(100);
 			}
-			line(frame, Point(x * 4, 0), Point(x * 4, y * 8), Scalar(127, 255, 0));
-			putText(frame, "play", Point(x * 4, 0), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+			cap >> frame;
+			line(frame, Point(x * 4, y), Point(x * 4, y * 8), Scalar(127, 255, 0));
+			putText(frame, "play", Point(x * 4, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);		
 			imshow("Sasha", frame);
-			_sleep(100);
-			minMaxLoc(frame, 0, &confidence, 0, &classIdPoint);
+			waitKey(100);
+			minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
 			putText(frame, labels[classIdPoint.x], Point(x * 2, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-			c = wait;
+			c = 'p';
 			break;
 		}
 		}
@@ -59,3 +58,7 @@ int main()
 	cout << " " << endl;
 	return 0;
 }
+/*int main() 
+{
+	return 0;
+}*/	
