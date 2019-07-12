@@ -5,6 +5,7 @@
 #define play 'p';
 #define quit 'q';
 #define two_play '2';
+#define one_play '1';
 string labels[3] = { "Rock","Scissors","Paper" };
 
 
@@ -19,7 +20,7 @@ int main()
 	int y = frame.rows / 8;
 	char c = 'w';
 	//
-	//Rect rect(Point(x,y*8),Point(7*x,4*y));
+	Rect rect(Point(0,0),Point(8*x,8*y));
 	//work with video
 	while (true) {
 		HandClassificator ds;
@@ -27,30 +28,52 @@ int main()
 		Point classIdPoint;
 		cap >> frame;
 		Mat crop;
-		line(frame, Point(x * 4, 0), Point(x * 4, y * 8), Scalar(0, 0, 255),2);
+		rectangle(frame, rect, Scalar(0, 0, 255), 2);
 		switch (c) {
 		case 'p': {
 			int wait_ = 3;
 			while (wait_ > 0) {
-				cap >> frame;
-				putText(frame, to_string(wait_), Point(x * 4, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+				int f = 0; 
+				while (f!=30)
+				{
+					waitKey(1);
+					cap >> frame;
+					putText(frame, to_string(wait_), Point(x * 3.6, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+					rectangle(frame, rect, Scalar(0, 0, 255), 2);
+					imshow("Sasha", frame);
+					f++;
+				}	
 				wait_--;
-				imshow("Sasha", frame);
-				int kw = 0;
-				waitKey(100);
 			}
+			int f = 0;
+			while (f != 30)
+			{
+				waitKey(1);
+				cap >> frame;
+				putText(frame, "Play", Point(x * 3.2, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+				rectangle(frame, rect, Scalar(127, 255, 0), 2);
+				imshow("Sasha", frame);
+				f++;
+			}
+			vector<int> res;
+			
 			cap >> frame;
-			line(frame, Point(x * 4, y), Point(x * 4, y * 8), Scalar(127, 255, 0));
-			putText(frame, "play", Point(x * 4, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);		
-			imshow("Sasha", frame);
-			waitKey(100);
 			minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
-			putText(frame, labels[classIdPoint.x], Point(x * 2, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-			c = 'p';
+			int f1 = 0;
+			while (f1 != 30)
+			{
+				waitKey(1);
+				cap >> frame;
+				putText(frame, labels[classIdPoint.x], Point(x * 1, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+				rectangle(frame, rect, Scalar(127, 255, 0), 2);
+				imshow("Sasha", frame);
+				f1++;
+			}
+			c = 'w';
 			break;
 		}
 		}
-		imshow("Sasha", frame);
+		cv::imshow("Sasha", frame);
 		c = (char)waitKey(2);
 		if (c == 'q')break;
 	}
@@ -58,7 +81,20 @@ int main()
 	cout << " " << endl;
 	return 0;
 }
-/*int main() 
-{
-	return 0;
-}*/	
+//int main() 
+//{
+//	VideoCapture cap(0);
+//	Mat frame;
+//	cap >> frame;
+//	while (true) {
+//		HandClassificator ds; 
+//		double confidence;
+//		Point classIdPoint;
+//		cap >> frame;
+//		cv::imshow("Okno", frame);
+//		minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
+//		cout << "ClassId:" << classIdPoint.x << endl << "Confidence:" << confidence << endl;
+//		waitKey(2);
+//	}
+//	return 0;
+//}	
