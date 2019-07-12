@@ -85,7 +85,8 @@ int main()
 					imshow("Sasha", frame);
 					f1++;
 				}
-				if (c = (char)waitKey(2) == 'q')break;
+				c = (char)waitKey(10);
+				if (c == 'w')break;
 			}
 			c = 'w';
 			break;
