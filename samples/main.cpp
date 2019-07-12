@@ -1,12 +1,14 @@
 #include <iostream>
 #include "classificator.h"
 #include "detector.h"
+#include <vector>
 #define wait 'w';
 #define play 'p';
 #define quit 'q';
 #define two_play '2';
 #define one_play '1';
-string labels[3] = { "Rock","Scissors","Paper" };
+string labels[3] = { "Paper","Rock","Scissiors" };
+string win[3] = { "Scissiors","Paper","Rock" };
 
 
 int main() 
@@ -27,12 +29,13 @@ int main()
 		double confidence;
 		Point classIdPoint;
 		cap >> frame;
+		Rect r(Point(x, y * 4), Point(x * 7, y * 8));
 		Mat crop;
 		rectangle(frame, rect, Scalar(0, 0, 255), 2);
 		switch (c) {
 		case 'p': {
-			int wait_ = 3;
-			while (wait_ > 0) {
+		int wait_ = 3;
+		while (wait_ > 0) {
 				int f = 0; 
 				while (f!=30)
 				{
@@ -55,19 +58,34 @@ int main()
 				imshow("Sasha", frame);
 				f++;
 			}
-			vector<int> res;
-			
-			cap >> frame;
-			minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
-			int f1 = 0;
-			while (f1 != 30)
-			{
-				waitKey(1);
-				cap >> frame;
-				putText(frame, labels[classIdPoint.x], Point(x * 1, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-				rectangle(frame, rect, Scalar(127, 255, 0), 2);
-				imshow("Sasha", frame);
-				f1++;
+			while (true) {
+				vector<int> res(3);
+				res[0] = 0; res[1] = 0; res[2] = 0;
+				int ca = 0;
+				while (ca != 15) {
+					cap >> frame;
+					imshow("Sasha", frame);
+					minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
+					if (confidence > 0.7)res[classIdPoint.x]++;
+					waitKey(2);
+					ca++;
+				}
+				int class1 = 0;
+				for (int i = 0; i < res.size(); i++) {
+					if (res[i] > class1)class1 = i;
+				}
+				int f1 = 0;
+				while (f1 != 30)
+				{
+					waitKey(1);
+					cap >> frame;
+					putText(frame, labels[class1], Point(x * 1, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+					putText(frame, win[class1], Point(x * 5, y * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
+					rectangle(frame, rect, Scalar(127, 255, 0), 2);
+					imshow("Sasha", frame);
+					f1++;
+				}
+				if (c = (char)waitKey(2) == 'q')break;
 			}
 			c = 'w';
 			break;
