@@ -8,7 +8,9 @@
 #define two_play '2';
 #define one_play '1';
 string labels[3] = { "Rock","Scissors","Paper" };
+string win[3] = { "Scissiors","Paper","Rock" };
 
+bool flag = 1;
 int x, y;
 Mat frame;
 Point pt(-1, -1);
@@ -52,10 +54,10 @@ int main()
 	 x = frame.cols / 8;
 	 y = frame.rows / 8;
 	cout << x << "  " << y << endl;
-	char c = 'w';
+	char s = 'w';
 	namedWindow("rps", WINDOW_NORMAL);
 	setMouseCallback("rps", mouse_callback);
-	bool flag = 1;
+
 	//work with video
 	while (flag) {
 		
@@ -69,17 +71,85 @@ int main()
 
 			if (newCoords)
 			{
+				//start to game
 				if (pt.x > 240 && pt.x < 370 && pt.y>190 && pt.y < 240)
 				{
-					while (1) {
+					while (flag) {
+						HandClassificator ds;
+						double confidence;
+						Point classIdPoint;
 						cap >> frame;
-						imshow("rps", frame);
-						char c = (char)waitKey(2);
-						if (c == 'q')
-							break;
-					}
-
+						Rect r(Point(x, y * 4), Point(x * 7, y * 8));
+						Rect rect(Point(0, 0), Point(8 * x, 8 * y));
+						rectangle(frame, rect, Scalar(0, 0, 255), 2);
+						//switch (s) {
+						//case 'p': {
+							int wait_ = 3;
+							while (wait_ > 0) {
+								int f = 0;
+								while (f != 30)
+								{
+									waitKey(1);
+									cap >> frame;
+									putText(frame, to_string(wait_), Point(x * 3.6, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+									rectangle(frame, rect, Scalar(0, 0, 255), 2);
+									imshow("rps", frame);
+									f++;
+								}
+								wait_--;
+							}
+							int f = 0;
+							while (f != 30)
+							{
+								waitKey(1);
+								cap >> frame;
+								putText(frame, "Play", Point(x * 3.2, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+								rectangle(frame, rect, Scalar(127, 255, 0), 2);
+								imshow("rps", frame);
+								f++;
+							}
+							while (flag) {
+								vector<int> res(3);
+								res[0] = 0; res[1] = 0; res[2] = 0;
+								int ca = 0;
+								while (ca != 15) {
+									cap >> frame;
+									imshow("rps", frame);
+									minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
+									if (confidence > 0.7)res[classIdPoint.x]++;
+									waitKey(2);
+									ca++;
+								}
+								int class1 = 0;
+								for (int i = 0; i < res.size(); i++) {
+									if (res[i] > class1)class1 = i;
+								}
+								int f1 = 0;
+								while (f1 != 30)
+								{
+									waitKey(1);
+									cap >> frame;
+									putText(frame, labels[class1], Point(x * 1, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+									putText(frame, win[class1], Point(x * 5, y * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
+									rectangle(frame, rect, Scalar(127, 255, 0), 2);
+									imshow("rps", frame);
+									f1++;
+								}
+								if (s = (char)waitKey(2) == 'q') {
+									flag = 0;
+									break;
+								}
+							}
+						}
 				}
+				
+				imshow("rps", frame);
+				char ch = (char)waitKey(2);
+				if (ch == 'q')
+				break;
+				
+
+	
 				if (pt.x > 240 && pt.x < 365 && pt.y>250 && pt.y < 305)
 					flag = 0;
 				std::cout << "Clicked coordinates: " << pt << std::endl;
@@ -87,8 +157,8 @@ int main()
 			}
 		}
 
-		char c = (char)waitKey(2);
-		if (c == 'q')
+		char co = (char)waitKey(2);
+		if (co == 'q')
 			break;
 	}
 	destroyAllWindows();
@@ -97,166 +167,3 @@ int main()
 }
 
 
-
-//#include <iostream>
-//#include "classificator.h"
-//#include "detector.h"
-//#define wait 'w';
-//#define play 'p';
-//#define quit 'q';
-//#define two_play '2';
-//string labels[3] = { "Rock","Scissors","Paper" };
-//
-//int x, y;
-//Mat frame;
-//Point pt(-1, -1);
-//bool newCoords = false;
-//
-//
-//void mouse_callback(int  event, int  x, int  y, int  flag, void *param)
-//{
-//	if (event == EVENT_LBUTTONDOWN)
-//	{
-//		// Store point coordinates
-//		pt.x = x;
-//		pt.y = y;
-//		newCoords = true;
-//	}
-//}
-//
-//void Menu(Mat frame) 
-//{
-//	putText(frame, "Menu", Point(x * 3, y * 3),  FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-//	putText(frame, "Play", Point(x * 3, y * 4), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-//	putText(frame, "Exit", Point(x * 3, y * 5), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-//}
-//
-//void DrawGrid(Mat mat,int x, int y) 
-//{
-//	for (int i = 1; i < 8; i++) 
-//	{
-//		line(mat, Point(0, y*i), Point(x * 8, y*i), Scalar(0, 250, 0), 2);
-//		line(mat, Point(x*i,0), Point(x * i, y*8), Scalar(0, 250, 0), 2);
-//	}
-//
-//}
-//
-//
-//int main()
-//{
-//	//Initialized arguments
-//
-//	VideoCapture cap(0);
-//	Mat frame;
-//	Mat image = imread("C:\\Users\\temp2019\\GitProject\\CV-SUMMER-CAMP\\data\\lobachevsky.jpg", 1);
-//	namedWindow("rps", WINDOW_NORMAL);
-//	cap >> frame;
-//	x = frame.cols / 8;
-//	y = frame.rows / 8;
-//	char c = 'w';
-//	// Set callback
-//	setMouseCallback("img", mouse_callback);
-//	while (1) {
-//		cap >> frame;
-//		DrawGrid(frame, x, y);
-//		Menu(frame);
-//		if (newCoords)
-//		{
-//			newCoords = false;
-//		}
-//		imshow("rps", frame);
-//		char c = waitKey(100);
-//		if (c == 'q')
-//			break;
-//	}
-//}
-//
-//
-//
-//
-//
-//
-//
-//
-//int main(int, char**)
-//{
-//	VideoCapture cap(0); // open the default camera
-//	if (!cap.isOpened())  // check if we succeeded
-//		return -1;
-//
-//	Mat edges;
-//	namedWindow("img", 1);
-//
-//	// Set callback
-//	setMouseCallback("img", mouse_callback);
-//
-//	for (;;)
-//	{
-//		cap >> frame; // get a new frame from camera
-//
-//					  // Show last point clicked, if valid
-//		if (pt.x != -1 && pt.y != -1)
-//		{
-//			circle(frame, pt, 3, Scalar(0, 0, 255));
-//
-//			if (newCoords)
-//			{
-//				std::cout << "Clicked coordinates: " << pt << std::endl;
-//				newCoords = false;
-//			}
-//		}
-//
-//		imshow("img", frame);
-//
-//		// Exit if 'q' is pressed
-//		if ((waitKey(1) & 0xFF) == 'q') break;
-//	}
-//	// the camera will be deinitialized automatically in VideoCapture destructor
-//	return 0;
-//}
-//
-
-	
-	//Rect rect(Point(x,y*8),Point(7*x,4*y));
-	//work with video
-	//while (true) {
-	//	HandClassificator ds;
-	//	double confidence;
-	//	Point classIdPoint;
-	//	cap >> frame;
-	//	Mat crop;
-	//	line(frame, Point(x * 4, 0), Point(x * 4, y * 8), Scalar(0, 0, 255),2);
-	//	switch (c) {
-	//	case 'p': {
-	//		int wait_ = 3;
-	//		while (wait_ > 0) {
-	//			cap >> frame;
-	//			putText(frame, to_string(wait_), Point(x * 4, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-	//			wait_--;
-	//			imshow("Sasha", frame);
-	//			int kw = 0;
-	//			waitKey(100);
-	//		}
-	//		cap >> frame;
-	//		line(frame, Point(x * 4, y), Point(x * 4, y * 8), Scalar(127, 255, 0));
-	//		putText(frame, "play", Point(x * 4, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);		
-	//		imshow("Sasha", frame);
-	//		waitKey(100);
-	//		minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
-	//		putText(frame, labels[classIdPoint.x], Point(x * 2, y), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-	//		c = 'p';
-	//		break;
-	//	}
-	//	}
-	//	imshow("Sasha", frame);
-	//	c = (char)waitKey(2);
-	//	if (c == 'q')break;
-	//}
-	
-//	cout << " " << endl;
-//	return 0;
-//}
-/*int main() 
-{
-	return 0;
-}*/	

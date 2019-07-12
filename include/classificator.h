@@ -17,7 +17,8 @@ public:
 };
 
 class HandClassificator :public Classificator {
-	string path_to_model, path_to_config, path_to_labels;
+	string path_to_model = "../../rps/models/mobilenet_v2_new.pb";
+	string path_to_config, path_to_labels;
 	int width, height;
 	Scalar mean;
 	double scale;
