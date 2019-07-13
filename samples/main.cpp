@@ -22,18 +22,14 @@ int main()
 		cap >> frame;
 		
 		if (c == 'p') {
-			int f = 0;
-			while (f != 30) {
-				save = frame(rec);
-				rectangle(frame, rec, Scalar(127, 255, 0), 2);
-				imshow("Window", frame);
-				cap >> frame;
-				string st= "Paper_" + to_string(count) + ".jpg";
-				imwrite(st, save);
-				count++;
-				f++;
-				waitKey(2);
-			}
+			save = frame(rec);
+			rectangle(frame, rec, Scalar(127, 255, 0), 2);
+			imshow("Window", frame);
+			cap >> frame;
+			string st= "Paper_" + to_string(count) + ".jpg";
+			imwrite(st, save);
+			count++;
+			waitKey(2);
 			c = 'w';
 		}
 		c = waitKey(2);
