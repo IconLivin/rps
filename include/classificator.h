@@ -24,6 +24,6 @@ class HandClassificator :public Classificator {
 	bool swap;
 	Net net;
 public:
-	HandClassificator(/*, string ptc, string ptl, int nwidth=300, int nheight=300, Scalar nmean = (0, 0, 0, 0), bool srb = 0*/);
+	HandClassificator();
 	Mat Classify(Mat image);
 };
