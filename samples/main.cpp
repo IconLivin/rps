@@ -72,7 +72,7 @@ int main()
 				}
 				int class1 = 0;
 				for (int i = 0; i < res.size(); i++) {
-					if (res[i] > class1)class1 = i;
+					if (res[i] > res[class1])class1 = i;
 				}
 				int f1 = 0;
 				while (f1 != 30)
