@@ -53,11 +53,53 @@ void Menu(Mat image)
 }
 
 //Draw fairgame
-void FairGame(Mat image) 
+int Level(Mat image) 
 {
+	int level;
 	DrawGrid8(image);
-	putText(image, "He4ectHo", Point(image.cols / 8 * 1, image.rows / 8 * 4.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-	putText(image, "4ectHo", Point(image.cols / 8 * 5.5, image.rows / 8 * 4.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+	bool stop=false;
+	while (!stop)
+	{
+	/*	pt.x = -1;
+		pt.y = -1;*/
+		newCoords = false;
+		putText(image, "Easy", Point(image.cols / 8 * 3, image.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+		putText(image, "Medium", Point(image.cols / 8 * 3, image.rows / 8 * 4), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+		putText(image, "Hard", Point(image.cols / 8 * 3, image.rows / 8 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+		putText(image, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 3);
+		imshow("rps", image);
+		bool c = (char)waitKey(2);
+		if (newCoords || c == 'q') {
+			if (pt.x > image.cols / 8 * 3 && pt.x<image.cols / 8 * 5 && pt.y> image.rows / 8 * 1 && pt.y < image.rows / 8 * 2)
+			{
+				newCoords = false;
+				cout << "easy" << endl;
+				level = 1;
+				return level;
+			}
+			else if (pt.x > image.cols / 8 * 3 && pt.x<image.cols / 8 * 6 && pt.y> image.rows / 8 * 3 && pt.y < image.rows / 8 * 4)
+			{
+				newCoords = false;
+				cout << "Medium" << endl;
+				level = 2;
+				return level;
+			}
+			else if (pt.x > image.cols / 8 * 3 && pt.x<image.cols / 8 * 5 && pt.y> image.rows / 8 * 5 && pt.y < image.rows / 8 * 6)
+			{
+				newCoords = false;
+				cout << "Hard" << endl;
+				level = 3;
+				return level;
+			}
+			else if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
+			{
+				newCoords = false;
+				level = 0;
+				cout << "back" << endl;
+				return level;
+			}
+		}
+	}
 }
 
 
@@ -69,7 +111,7 @@ void Func()
 
 }
 
-int main() 
+int main()
 {
 	//Initialize
 	VideoCapture cap(0);
@@ -79,9 +121,9 @@ int main()
 	}
 	Mat menu = imread("../../rps/data/background.png");
 	Mat copy = imread("../../rps/data/background.png");
-	Mat rock= imread("../../rps/data/rock.png");
-	Mat paper= imread("../../rps/data/paper.png");
-	Mat scrissors= imread("../../rps/data/scissors.png");
+	Mat rock = imread("../../rps/data/rock.jpg");
+	Mat paper = imread("../../rps/data/paper.jpg");
+	Mat scrissors = imread("../../rps/data/scissors.jpg"); 
 	if (!menu.data && !rock.data && !paper.data && !scrissors.data )
 	{
 		printf("Error loading image \n");
@@ -89,23 +131,17 @@ int main()
 	}
 	namedWindow("rps", WINDOW_AUTOSIZE);
 	setMouseCallback("rps", mouse_callback);
-	Size size(640, 480);
 	cap >> frame;
+	resize(menu, menu, Size(frame.cols, frame.rows));
+	resize(copy, copy, Size(frame.cols, frame.rows));
+	resize(rock, rock, Size(frame.cols, frame.rows));
+	resize(paper, paper, Size(frame.cols, frame.rows));
+	resize(scrissors, scrissors, Size(frame.cols, frame.rows));
+
 	cout << frame.cols << endl << frame.rows << endl;
-	bool resolution;
-	if (frame.cols == 640 && frame.rows == 480)
-		resolution = true;
-	else
-	{
-		resize(frame, frame, size);
-		resolution = false;
-	}
+	
 	x = menu.cols / 14;
 	y = menu.rows / 14;
-	//Menu(image);
-	//imshow("new", image);
-	//waitKey();
-	//Test while for buttons on menu
 	bool exit = false;
 	while (!exit) {
 		Menu(menu);
@@ -118,11 +154,8 @@ int main()
 		{
 			if ((pt.x > x * 2 && pt.x<x * 5 && pt.y>y * 6.5 && pt.y < y * 8) || c == 'p')
 			{
-				bool fair_game;
-				FairGame(copy);
-				imshow("rps", copy);
-				waitKey(1000);
-				//if 
+				newCoords = false;
+				int level=Level(copy);
 				cout << "play" << endl;
 				bool menu = false;
 				cout << frame.cols << "  " << frame.rows << endl;
@@ -142,8 +175,6 @@ int main()
 						while (f != 30)
 						{
 							cap >> frame;
-							if (!resolution)
-								resize(frame, frame, size);
 							putText(frame, to_string(wait_), Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 -20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 							rectangle(frame, rect, Scalar(0, 0, 255), 2);
@@ -170,8 +201,6 @@ int main()
 					{
 						
 						cap >> frame;
-						if (!resolution)
-							resize(frame, frame, size);
 						putText(frame, "Play", Point(frame.cols / 8 * 3.2, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 						putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 						rectangle(frame, rect, Scalar(127, 255, 0), 2);
@@ -186,103 +215,90 @@ int main()
 							}
 						f++;
 					}
+					cout << "Classidy start " << endl;
 					newCoords = false;
-
-
+					int i = 0;
 					vector<int> res(3);
 					res[0] = 0; res[1] = 0; res[2] = 0;
 					int fff = 0;  //first fifteen frame
 					while (fff != 15) {
 						cap >> frame;
-						if (!resolution)
-							resize(frame, frame, size);
 						putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 						imshow("rps", frame);
-						c = (char)waitKey(2);
-						if (newCoords || c == 'q')
-							if ((pt.x >  frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
+						c = (char)waitKey(1);
+						if (newCoords || c == 'q') {
+							if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
 							{
 								cout << "exit" << endl;
 								menu = true;
 								break;
 							}
+						}
 						minMaxLoc(ds.Classify(frame), 0, &confidence, 0, &classIdPoint);
+						cout << i++ << endl;
 						if (confidence > 0.7)
 							res[classIdPoint.x]++;					
 						fff++;
 					}
 
 					//this was test
-				/*	vector<int> res (3);
-					res[0] = 0;
-					res[1] = 10;
-					res[2] = 12;*/
-
-
 					cout << "Classidy succeed" << endl;
-					//Antoha IIoJloMaJlc9
-					//int class1 = 0; //Who is have max confidence
-					//for (int i = 0; i < res.size(); i++) {
-					//	if (res[i] > res[class1])
-					//		class1 = i;
-					//}
-
 					int class1 = 0; //Who is have max confidence
 					for (int i = 0; i < res.size(); i++) {
 						if (res[i] > res[class1])
 							class1 = i;
 					}
 
+					if (level == 3) {
+						cout << "win class -" << class1 << "\t" << win[class1] << endl;
+						f = 0;
+						while (f != 30)
+						{
+							cap >> frame;
+							//	putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+							//	putText(frame, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+							//	putText(frame, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
+							if (class1 == 0)
+							{
+								putText(scrissors, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+								putText(scrissors, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(scrissors, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+								putText(scrissors, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
+								imshow("rps", scrissors);
+								//waitKey(200);
 
-					cout <<"win class -" <<class1<< "\t"<<win[class1] << endl;
-					f = 0;
-					while (f != 30)
-					{
-						cap >> frame;
-						if (!resolution)
-							resize(frame, frame, size);
-					//	putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-					//	putText(frame, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-					//	putText(frame, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-						if (class1 == 0)
-						{
-							putText(scrissors,"Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-							putText(scrissors, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-							putText(scrissors, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-							putText(scrissors, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-							imshow("rps", scrissors);
-							waitKey(500);
-						}
-						else if (class1 == 1)
-						{
-							putText(paper, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-							putText(paper, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-							putText(paper, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-							putText(paper, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-							imshow("rps", paper);
-							waitKey(500);
-						}
-						else 
+							}
+							else if (class1 == 1)
+							{
+								putText(paper, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+								putText(paper, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(paper, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+								putText(paper, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
+								imshow("rps", paper);
+								//waitKey(200);
+							}
+							else if (class1==2)
 							{
 								putText(rock, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 								putText(rock, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 								putText(rock, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 								putText(rock, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
 								imshow("rps", rock);
-								waitKey(500);
+								//waitKey(200);
 							}
 
-						//rectangle(frame, rect, Scalar(127, 255, 0), 2);
-						//imshow("rps", frame);
-						c = (char)waitKey(2);
-						if (newCoords || c == 'q')
-							if ((pt.x >  frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
-							{
-								cout << "exit" << endl;
-								menu = true;
-								break;
-							}
-						f++;
+							//rectangle(frame, rect, Scalar(127, 255, 0), 2);
+							//imshow("rps", frame);
+							c = (char)waitKey(200);
+							if (newCoords || c == 'q')
+								if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
+								{
+									cout << "exit" << endl;
+									menu = true;
+									break;
+								}
+							f++;
+						}
 					}
 					cout << "the end" << endl;
 				}
