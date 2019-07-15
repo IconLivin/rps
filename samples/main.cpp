@@ -118,10 +118,10 @@ int main()
 		{
 			if ((pt.x > x * 2 && pt.x<x * 5 && pt.y>y * 6.5 && pt.y < y * 8) || c == 'p')
 			{
-				bool fair_game;
+			/*	bool fair_game;
 				FairGame(copy);
 				imshow("rps", copy);
-				waitKey(1000);
+				waitKey(1000);*/
 				//if 
 				cout << "play" << endl;
 				bool menu = false;
