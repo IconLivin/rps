@@ -45,10 +45,21 @@ void mouse_callback(int  event, int  xt, int  yt, int  flag, void *param)
 //Draw start menu
 void Menu(Mat image)
 {
-	putText(image, "Menu", Point(image.cols/8 * 3, image.rows / 8 * 3), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-	putText(image, "Play", Point(image.cols/8 * 3, image.rows / 8 * 4), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-	putText(image, "Exit", Point(image.cols/8* 3, image.rows / 8 * 5), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+	putText(image, "Menu", Point(image.cols/8 * 3, image.rows / 8 * 2.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+	putText(image, "Play", Point(image.cols/8 * 1, image.rows / 8 * 4.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 5);
+	//rectangle(image, Rect(Point(image.cols / 14 * 9, image.rows / 14 * 6), Point(image.cols / 14 * 13, image.rows / 14 * 9)), Scalar(255, 240, 184), FILLED);
+	//rectangle(image, Rect(Point(image.cols / 14 * 9, image.rows / 14 * 6), Point(image.cols / 14 * 13, image.rows / 14 * 9)), Scalar(0, 0, 0), 1/*FILLED*/);
+	putText(image, "Exit", Point(image.cols/8* 5.5, image.rows / 8 * 4.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 5);
 }
+
+//Draw fairgame
+void FairGame(Mat image) 
+{
+	DrawGrid8(image);
+	putText(image, "He4ectHo", Point(image.cols / 8 * 1, image.rows / 8 * 4.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+	putText(image, "4ectHo", Point(image.cols / 8 * 5.5, image.rows / 8 * 4.5), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+}
+
 
 void Func() 
 {
@@ -67,6 +78,7 @@ int main()
 		return -1;
 	}
 	Mat menu = imread("../../rps/data/background.png");
+	Mat copy = imread("../../rps/data/background.png");
 	Mat rock= imread("../../rps/data/rock.png");
 	Mat paper= imread("../../rps/data/paper.png");
 	Mat scrissors= imread("../../rps/data/scissors.png");
@@ -104,8 +116,13 @@ int main()
 			exit = true;
 		if (newCoords||c=='p')
 		{
-			if ((pt.x > x * 5 && pt.x<x * 8 && pt.y>y * 6 && pt.y < y * 7) || c == 'p')
+			if ((pt.x > x * 2 && pt.x<x * 5 && pt.y>y * 6.5 && pt.y < y * 8) || c == 'p')
 			{
+				bool fair_game;
+				FairGame(copy);
+				imshow("rps", copy);
+				waitKey(1000);
+				//if 
 				cout << "play" << endl;
 				bool menu = false;
 				cout << frame.cols << "  " << frame.rows << endl;
@@ -234,7 +251,7 @@ int main()
 							putText(scrissors, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(scrissors, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
 							imshow("rps", scrissors);
-							waitKey(1000);
+							waitKey(500);
 						}
 						else if (class1 == 1)
 						{
@@ -243,7 +260,7 @@ int main()
 							putText(paper, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(paper, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
 							imshow("rps", paper);
-							waitKey(1000);
+							waitKey(500);
 						}
 						else 
 							{
@@ -252,7 +269,7 @@ int main()
 								putText(rock, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 								putText(rock, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
 								imshow("rps", rock);
-								waitKey(1000);
+								waitKey(500);
 							}
 
 						//rectangle(frame, rect, Scalar(127, 255, 0), 2);
@@ -271,7 +288,7 @@ int main()
 				}
 			}
 				
-			if (pt.x > x * 5 && pt.x<x * 8 && pt.y>y * 8 && pt.y < y * 9)
+			if (pt.x > x * 9.7 && pt.x<x * 12.3 && pt.y>y * 6.5 && pt.y < y * 8)
 				exit = true;
 			cout << pt.x << "   " << pt.y << endl;
 			newCoords = false;
