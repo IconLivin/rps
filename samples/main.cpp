@@ -79,6 +79,7 @@ int main()
 	setMouseCallback("rps", mouse_callback);
 	Size size(640, 480);
 	cap >> frame;
+	cout << frame.cols << endl << frame.rows << endl;
 	bool resolution;
 	if (frame.cols == 640 && frame.rows == 480)
 		resolution = true;
@@ -96,7 +97,7 @@ int main()
 	bool exit = false;
 	while (!exit) {
 		Menu(menu);
-		DrawGrid14(menu);
+		//DrawGrid14(menu);
 		imshow("rps", menu);
 		char c = (char) waitKey(2);
 		if (c == 'q')
@@ -194,7 +195,7 @@ int main()
 						fff++;
 					}
 
-					//this is was test
+					//this was test
 				/*	vector<int> res (3);
 					res[0] = 0;
 					res[1] = 10;
@@ -228,7 +229,7 @@ int main()
 					//	putText(frame, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
 						if (class1 == 0)
 						{
-							putText(frame,"Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+							putText(scrissors,"Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(scrissors, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 							putText(scrissors, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(scrissors, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
@@ -237,7 +238,7 @@ int main()
 						}
 						else if (class1 == 1)
 						{
-							putText(frame, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+							putText(paper, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(paper, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 							putText(paper, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 							putText(paper, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
@@ -246,7 +247,7 @@ int main()
 						}
 						else 
 							{
-								putText(frame, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
+								putText(rock, "Antoha lose", Point(frame.cols / 8 * 3.6, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 								putText(rock, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 								putText(rock, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
 								putText(rock, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
