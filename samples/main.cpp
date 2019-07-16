@@ -1,5 +1,6 @@
 #include <iostream>
 #include "classificator.h"
+#include <ctime>
 //#include "detector.h"
 #include <vector>
 string labels[3] = { "Paper","Rock","Scissiors" };
@@ -118,6 +119,7 @@ int main()
 		cout << "Error opening cam" << endl;
 		return -1;
 	}
+	srand(time(NULL));
 	Mat menu = imread("../../rps/data/background.png");
 	Mat copy = imread("../../rps/data/background.png");
 	Mat rock = imread("../../rps/data/rock.jpg");
@@ -219,7 +221,7 @@ int main()
 					vector<int> res(3);
 					res[0] = 0; res[1] = 0; res[2] = 0;
 					int fff = 0;  //first fifteen frame
-					while (fff != 3) {
+					while (fff != 15) {
 						cap >> frame;
 						putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
 						imshow("rps", frame);
@@ -238,7 +240,7 @@ int main()
 						fff++;
 					}
 					int class1 = 0; //Who is have max confidence
-					for (int i = 0; i < res.size(); i++) {
+					for (int i = 1; i < res.size(); i++) {
 						if (res[i] > res[class1])
 							class1 = i;
 					}
@@ -247,40 +249,38 @@ int main()
 						cout << "win class -" << class1 << "\t" << win[class1] << endl;
 						f = 0;
 						bot_score++;
+						if (class1 == 0)
+						{
+						
+							scrissors.copyTo(frame);
+							
+
+							//waitKey(200);
+
+						}
+						else if (class1 == 1)
+						{
+							
+							paper.copyTo(frame);
+
+							//waitKey(200);
+						}
+						else if (class1 == 2)
+						{
+							rock.copyTo(frame);
+							
+
+							//waitKey(200);
+						}
 						while (f != 30)
 						{
-							//cap >> frame;
-							//	putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-							//	putText(frame, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-							//	putText(frame, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-							if (class1 == 0)
-							{
-								putText(scrissors, "You lose", Point(scrissors.cols / 8 * 2, scrissors.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-								putText(scrissors, "Exit", Point(scrissors.cols / 8 * 7, scrissors.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-								//putText(scrissors, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-								//putText(scrissors, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-								imshow("rps", scrissors);
-								//waitKey(200);
-
-							}
-							else if (class1 == 1)
-							{
-								putText(paper, "You lose", Point(paper.cols / 8 * 2, paper.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-								putText(paper, "Exit", Point(paper.cols / 8 * 7, paper.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-								//putText(paper, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-								//putText(paper, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-								imshow("rps", paper);
-								//waitKey(200);
-							}
-							else if (class1==2)
-							{
-								putText(rock, "You lose", Point(rock.cols / 8 * 2, rock.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-								putText(rock, "Exit", Point(rock.cols / 8 * 7, rock.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-								//putText(rock, labels[class1], Point(frame.cols / 8 * 1, frame.rows / 8), FONT_ITALIC, 2, Scalar(255, 255, 255), 2);
-								//putText(rock, win[class1], Point(frame.cols / 8 * 5, frame.rows / 8 * 5), FONT_ITALIC, 2, Scalar(0, 255, 0), 2);
-								imshow("rps", rock);
-								//waitKey(200);
-							}
+							
+							
+							putText(frame, "You lose", Point(frame.cols / 8 * 2, frame.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+							putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+							putText(frame, to_string(player_score), Point(frame.cols / 28 * 5, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+							putText(frame, to_string(bot_score), Point(frame.cols / 28 * 20, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+							imshow("rps", frame);
 							c = (char)waitKey(150);
 							if (newCoords || c == 'q')
 								if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
@@ -296,31 +296,37 @@ int main()
 					}
 					else if (level == 2) 
 					{
-						int luck = rand() % 2;
+						
+						int luck = rand() % 3;
 						if (luck == 0) //nobody win and lose
 						{
 							f = 0;
 							cout << "Draw" << endl;
+							if (class1 == 2)
+							{
+								
+								scrissors.copyTo(frame);
+								
+							}
+							else if (class1 == 0)
+							{
+							
+								paper.copyTo(frame);
+							}
+							else if (class1 == 1)
+							{
+								rock.copyTo(frame);
+								
+
+							}
 							while (f != 30)
 							{
-								if (class1 == 2)
-								{
-									putText(scrissors, "Draw", Point(scrissors.cols / 8 * 2, scrissors.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(scrissors, "Exit", Point(scrissors.cols / 8 * 7, scrissors.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", scrissors);
-								}
-								else if (class1 == 0)
-								{
-									putText(paper, "Draw", Point(paper.cols / 8 * 2, paper.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(paper, "Exit", Point(paper.cols / 8 * 7, paper.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", paper);
-								}
-								else if (class1 == 1)
-								{
-									putText(rock, "Draw", Point(rock.cols / 8 * 2, rock.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(rock, "Exit", Point(rock.cols / 8 * 7, rock.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", rock);
-								}
+								
+								putText(frame, "Draw", Point(frame.cols / 8 * 2, frame.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(frame, to_string(player_score), Point(frame.cols / 28 * 5, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, to_string(bot_score), Point(frame.cols / 28 * 20, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								imshow("rps", frame);
 								c = (char)waitKey(150);
 								if (newCoords || c == 'q')
 									if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
@@ -339,26 +345,30 @@ int main()
 							cout << "win class -" << class1 << "\t" << win[class1] << endl;
 							f = 0;
 							bot_score++;
+							if (class1 == 0)
+							{
+								
+								scrissors.copyTo(frame);
+								
+							}
+							else if (class1 == 1)
+							{
+								
+								paper.copyTo(frame);
+							}
+							else if (class1 == 2)
+							{
+								rock.copyTo(frame);
+								
+							}
 							while (f != 30)
 							{
-								if (class1 == 0)
-								{
-									putText(scrissors, "You lose", Point(scrissors.cols / 8 * 2, scrissors.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(scrissors, "Exit", Point(scrissors.cols / 8 * 7, scrissors.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", scrissors);
-								}
-								else if (class1 == 1)
-								{
-									putText(paper, "You lose", Point(paper.cols / 8 * 2, paper.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(paper, "Exit", Point(paper.cols / 8 * 7, paper.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", paper);
-								}
-								else if (class1 == 2)
-								{
-									putText(rock, "You lose", Point(rock.cols / 8 * 2, rock.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(rock, "Exit", Point(rock.cols / 8 * 7, rock.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", rock);
-								}
+								
+								putText(frame, "You lose", Point(frame.cols / 8 * 2, frame.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(frame, to_string(player_score), Point(frame.cols / 28 * 5, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, to_string(bot_score), Point(frame.cols / 28 * 20, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								imshow("rps", frame);
 								c = (char)waitKey(150);
 								if (newCoords || c == 'q')
 									if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
@@ -376,26 +386,29 @@ int main()
 						{
 							f = 0;
 							player_score++;
+							if (class1 == 0)
+							{
+								rock.copyTo(frame);
+								
+							}
+							else if (class1 == 1)
+							{
+					
+								scrissors.copyTo(frame);
+								
+							}
+							else if (class1 == 2)
+							{
+								paper.copyTo(frame);
+							}
 							while (f != 30)
 							{
-								if (class1 == 0)
-								{
-									putText(rock, "You win", Point(rock.cols / 8 * 2, rock.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(rock, "Exit", Point(rock.cols / 8 * 7, rock.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", rock);
-								}
-								else if (class1 == 1)
-								{
-									putText(scrissors, "You win", Point(scrissors.cols / 8 * 2, scrissors.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(scrissors, "Exit", Point(scrissors.cols / 8 * 7, scrissors.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", scrissors);
-								}
-								else if (class1 == 2)
-								{
-									putText(paper, "You win", Point(paper.cols / 8 * 2, paper.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(paper, "Exit", Point(paper.cols / 8 * 7, paper.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", paper);
-								}
+								
+								putText(frame, "You win", Point(frame.cols / 8 * 2, frame.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(frame, to_string(player_score), Point(frame.cols / 28 * 5, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, to_string(bot_score), Point(frame.cols / 28 * 20, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								imshow("rps", frame);
 								c = (char)waitKey(150);
 								if (newCoords || c == 'q')
 									if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
@@ -417,26 +430,27 @@ int main()
 						{
 							f = 0;
 							player_score++;
+							if (class1 == 0)
+							{
+								rock.copyTo(frame);
+							}
+							else if (class1 == 1)
+							{
+					
+								scrissors.copyTo(frame);
+							}
+							else if (class1 == 2)
+							{
+								paper.copyTo(frame);
+							}
 							while (f != 30)
 							{
-								if (class1 == 0)
-								{
-									putText(rock, "You win", Point(rock.cols / 8 * 2, rock.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(rock, "Exit", Point(rock.cols / 8 * 7, rock.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", rock);
-								}
-								else if (class1 == 1)
-								{
-									putText(scrissors, "You win", Point(scrissors.cols / 8 * 2, scrissors.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(scrissors, "Exit", Point(scrissors.cols / 8 * 7, scrissors.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", scrissors);
-								}
-								else if (class1 == 2)
-								{
-									putText(paper, "You win", Point(paper.cols / 8 * 2, paper.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(paper, "Exit", Point(paper.cols / 8 * 7, paper.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", paper);
-								}
+								
+								putText(frame, "You win", Point(frame.cols / 8 * 2, frame.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(frame, to_string(player_score), Point(frame.cols / 28 * 5, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, to_string(bot_score), Point(frame.cols / 28 * 20, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								imshow("rps", frame);
 								c = (char)waitKey(150);
 								if (newCoords || c == 'q')
 									if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
@@ -454,26 +468,33 @@ int main()
 						{
 							f = 0;
 							bot_score++;
+							if (class1 == 0)
+							{
+								
+								scrissors.copyTo(frame);
+					
+								
+							}
+							else if (class1 == 1)
+							{
+								
+								paper.copyTo(frame);
+								
+							}
+							else if (class1 == 2)
+							{
+								rock.copyTo(frame);
+								
+								
+							}
+							
 							while (f != 30)
 							{
-								if (class1 == 0)
-								{
-									putText(scrissors, "You lose", Point(scrissors.cols / 8 * 2, scrissors.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(scrissors, "Exit", Point(scrissors.cols / 8 * 7, scrissors.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", scrissors);
-								}
-								else if (class1 == 1)
-								{
-									putText(paper, "You lose", Point(paper.cols / 8 * 2, paper.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(paper, "Exit", Point(paper.cols / 8 * 7, paper.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", paper);
-								}
-								else if (class1 == 2)
-								{
-									putText(rock, "You lose", Point(rock.cols / 8 * 2, rock.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
-									putText(rock, "Exit", Point(rock.cols / 8 * 7, rock.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
-									imshow("rps", rock);
-								}
+								putText(frame, "You lose", Point(frame.cols / 8 * 2, frame.rows / 8 * 2), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, "Exit", Point(frame.cols / 8 * 7, frame.rows / 8 - 20), FONT_ITALIC, 1, Scalar(255, 255, 255), 2);
+								putText(frame, to_string(player_score), Point(frame.cols / 28 * 5, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								putText(frame, to_string(bot_score), Point(frame.cols / 28 * 20, frame.rows / 24 * 6), FONT_ITALIC, 2, Scalar(255, 255, 255), 3);
+								imshow("rps", frame);
 								c = (char)waitKey(150);
 								if (newCoords || c == 'q')
 									if ((pt.x > frame.cols / 8 * 7 && pt.y < frame.rows / 8) || c == 'q')
